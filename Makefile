@@ -5,8 +5,13 @@
 #######################
 CC=clang++
 NAME=Container
-FLAGS= -Wall -Wextra -Wall -std=c++98
+
+OLD= -std=c++98
+FLAGS= -Wall -Wextra -Wall -g -std=c++98
+
 SRCS=	main.cpp
+TEST= test/test_1.cpp
+TEST_NAME= test.out
 #######################
 OBJS=${SRCS:.cpp=.o}
 #######################
@@ -23,7 +28,13 @@ clean:
 #######################
 fclean: clean
 	@rm -f $(NAME)
+	@rm -f $(TEST_NAME)
 #######################
 re: fclean all
 #######################
 .PHONY: all clean fclean re
+
+test: fclean
+	@$(CC) $(TEST) -Wall -Wextra -Wall -g -lcriterion -o $(TEST_NAME)
+	@./$(TEST_NAME)
+	
