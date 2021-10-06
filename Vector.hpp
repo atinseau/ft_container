@@ -6,7 +6,7 @@
 #include <stdexcept>
 
 #include "Iterators/Iterator.hpp"
-
+#include "stl.hpp"
 
 namespace fd
 {
@@ -83,11 +83,17 @@ namespace fd
 
 			void			assign(size_type count, const value_type& value)
 			{
-				clear();
-				_alloc.deallocate(_c, _capacity);
-				reserve(count);
+				_clear_capacity(count);
 				for(; _size < count; _size++)
 					_alloc.construct(&_c[_size], value);
+			}
+
+			template< class InputIt >
+			void			assign( InputIt first, InputIt last, typename fd::enable_if<!fd::is_integral<InputIt>::value >::type* = 0)
+			{
+				_clear_capacity(std::distance(first, last));
+				for (; first != last; first++)
+					_alloc.construct(&_c[_size++], *first);
 			}
 
 			void			push_back(const value_type &value)
@@ -181,7 +187,7 @@ namespace fd
 			// OVERLOAD
 			/**************************************************/
 
-			reference &		operator[](int N) { return (_c[N]); }
+			reference		operator[](int N) { return (_c[N]); }
 
 
 			// STATE FUNCTION
@@ -195,5 +201,13 @@ namespace fd
 				allocator_type	_alloc;
 				size_type		_capacity;
 				size_type		_size;
+
+				void _clear_capacity(size_type count)
+				{
+					clear();
+					if (_capacity)
+						_alloc.deallocate(_c, _capacity);
+					reserve(count);
+				}
 	};
 };

@@ -54,20 +54,23 @@ int insert_bench(void)
 
 int main(void)
 {
+	std::vector<std::string> db1 (10, "salut les gars");
 
-	std::vector<int> v1;
-	fd::vector<int> v2;
+	
 
-	for (int i = 0; i < 100; i++)
-	{
-		v1.push_back(i);
-		v2.push_back(i);
-	}
+	fd::vector<std::string> v1;
+	// fd::vector<std::string> v2;
 
-	v1.insert(v1.begin(), v2.begin(), v2.end());
+	v1.assign(db1.begin(), db1.end());
+	// v2.assign(db1.begin(), db1.end());
 
-	vdebug(v1);
 	vprint(v1);
+
+	// v1.assign(db2.begin(), db2.end());
+	// v2.assign(db2.begin(), db2.end());
+
+	// std::cout << std::endl;
+
 
 	return (0);
 }

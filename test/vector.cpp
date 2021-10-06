@@ -12,46 +12,6 @@ Test(vector_init, is_empty_at_start)
 	cr_assert(v1.capacity() == v2.capacity(), "Your vector has a capacity");
 }
 
-template <typename T>
-bool compare(std::vector<T> &v1, fd::vector<T> &v2)
-{
-	if (v1.size() != v2.size())	
-		return false;
-	for (size_t i = 0; i < v1.size(); i++)
-	{
-		if (v1[i] != v2[i])
-			return false;
-	}
-	return true;
-}
-
-template <typename T>
-bool equal(std::vector<T> &v1, fd::vector<T> &v2)
-{
-	bool success = true;
-	if (v1.empty() != v2.empty())
-	{
-		std::cout << "Your vector is empty at start..." << std::endl;
-		success = false;
-	}
-	if(v1.size() != v2.size())
-	{
-		std::cout << "Your vector has not the good size..." << std::endl;
-		success = false;
-	}
-	if(v1.capacity() != v2.capacity())
-	{
-		std::cout << "Your vector has not the good capacity..." << std::endl;
-		success = false;
-	}
-	if (!compare(v1, v2))
-	{
-		std::cout << "Your vector is not the same with the real vector..." << std::endl;
-		success = false;
-	}
-	return (success);
-}
-
 Test(vector_init, right_constructor)
 {
 	std::vector<int> v1 (10);
@@ -103,3 +63,52 @@ Test(vector_init, insert_on_empty_vector)
 	cr_assert(equal(v1, v2), "Vector differ....!");
 }
 
+
+Test(vector_init, assign_empty_vector)
+{
+	std::vector<int> db;
+
+	std::vector<int> v1;
+	fd::vector<int> v2;
+	std::vector<int> v3;
+	fd::vector<int> v4;
+
+	v1.assign(100, 34);
+	v2.assign(100, 34);
+
+	for (int i = 0; i < 100; i++)
+	{
+		v3.push_back(i);
+		v4.push_back(i);
+		db.push_back(i);
+	}
+
+	v3.assign(db.begin(), db.end());
+	v4.assign(db.begin(), db.end());
+
+	cr_assert(equal(v1, v2), "Vector differ....!");
+}
+
+
+Test(vector_init, assign_enable_if_vector)
+{
+	std::vector<std::string> db1 (10, "salut les gars");
+	fd::vector<std::string> db2(10, "salut les gars");
+
+	cr_assert(equal(db1, db2), "Vector differ....!");
+
+
+	std::vector<std::string> v1;
+	fd::vector<std::string> v2;
+
+	v1.assign(db1.begin(), db1.end());
+	v2.assign(db1.begin(), db1.end());
+
+	cr_assert(equal(v1, v2), "Vector differ....!");
+
+	v1.assign(db2.begin(), db2.end());
+	v2.assign(db2.begin(), db2.end());
+
+	cr_assert(equal(v1, v2), "Vector differ....!");
+
+}

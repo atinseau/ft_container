@@ -10,7 +10,7 @@ OLD= -std=c++98
 FLAGS= -Wall -Wextra -Wall -g -std=c++98
 
 SRCS=	main.cpp
-TEST= test/test_1.cpp
+TEST= test/vector.cpp
 TEST_NAME= test.out
 #######################
 OBJS=${SRCS:.cpp=.o}

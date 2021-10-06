@@ -42,6 +42,8 @@ namespace fd
 
 			Iterator operator+(difference_type __n) { return Iterator(m_ptr + __n); }
 			Iterator operator-(difference_type __n) { return Iterator(m_ptr - __n); }
+			difference_type operator-(const Iterator &it) { return m_ptr - it.m_ptr; }
+			difference_type operator+(const Iterator &it) { return m_ptr + it.m_ptr; }
 
 			Iterator& operator++(void) { m_ptr++; return *this; }
 			Iterator operator++(int)
