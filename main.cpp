@@ -1,75 +1,29 @@
 
-#include <iostream>
-#include <sys/time.h>
-#include <vector>
-#include "Vector.hpp"
-# define MAX_SIZE 100000000
+#include "test/tester.hpp"
 
-
-
-template <typename T>
-void vdebug(T & v)
-{
-	std::cout << "Empty: " << (v.empty() ? "True" : "False") << std::endl;
-	std::cout << "Size: " << v.size() << std::endl;
-	std::cout << "Capacity: " << v.capacity() << std::endl;
-}
-
-template <typename T>
-void vprint(T & v)
-{
-	for(typename T::iterator it = v.begin(); it != v.end(); it++)
-		std::cout << *it << std::endl;
-}
-
-
-template <typename T>
-int push_bench(void)
-{
-	T v1 ;
-
-	for(int i = 0; i < MAX_SIZE; i++)
-		v1.push_back("salut tout le monde");
-	return (1);
-}
-
-template<typename T>
-int insert_bench(void)
-{
-	T v1 (MAX_SIZE, 10);
-
-	std::vector<int> needed;
-
-	for(int i = 0; i < 10; i++)
-		needed.push_back(i);
-
-	while(needed.size() != 0)
-	{
-		v1.insert(v1.begin() + (v1.size() / 2), 3, needed.back());
-		needed.pop_back();
-	}
-	return (1);
-}
 
 
 int main(void)
 {
-	std::vector<std::string> db1 (10, "salut les gars");
-
+	std::vector<int>v1;
+	fd::vector<int>v2;
 	
+	for(int i = 0; i < 5; i++)
+	{
+		v1.push_back(i);
+		v2.push_back(i);
+	}
 
-	fd::vector<std::string> v1;
-	// fd::vector<std::string> v2;
+	std::cout << *(v1.end() - 1) << std::endl;
+	std::cout << *(v2.end() - 1) << std::endl;
 
-	v1.assign(db1.begin(), db1.end());
-	// v2.assign(db1.begin(), db1.end());
+	std::cout << std::endl;
 
-	vprint(v1);
+	std::vector<int>::iterator res_it_1 = v1.erase(v1.end() - 1);
+	fd::vector<int>::iterator res_it_2 = v2.erase(v2.end() - 1);
 
-	// v1.assign(db2.begin(), db2.end());
-	// v2.assign(db2.begin(), db2.end());
-
-	// std::cout << std::endl;
+	std::cout << v1[4] << std::endl;
+	std::cout << v2[3] << std::endl;
 
 
 	return (0);

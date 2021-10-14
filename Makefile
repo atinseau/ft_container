@@ -9,8 +9,9 @@ NAME=Container
 OLD= -std=c++98
 FLAGS= -Wall -Wextra -Wall -g -std=c++98
 
-SRCS=	main.cpp
-TEST= test/vector.cpp
+SRCS=	main.cpp 
+TEST= test/vector.cpp \
+	  test/utils.cpp
 TEST_NAME= test.out
 #######################
 OBJS=${SRCS:.cpp=.o}
@@ -32,9 +33,20 @@ fclean: clean
 #######################
 re: fclean all
 #######################
-.PHONY: all clean fclean re
+test:
+	@docker build -t criterion -q test &> /dev/null
+	@docker run -it --env COMMAND=run_test -v $$PWD:/tmp/project criterion
+valgrind:
+	@docker build -t criterion -q test &> /dev/null
+	@docker run -it --env COMMAND=run_valgrind -v $$PWD:/tmp/project criterion
 
-test: fclean
-	@$(CC) $(TEST) -Wall -Wextra -Wall -g -lcriterion -o $(TEST_NAME)
-	@./$(TEST_NAME)
-	
+# ONLY IN CONTAINER
+run_test:
+	@$(CC) $(TEST) -Wall -Wextra -Wall -g -lcriterion -I. -std=c++11 -D C11=1 -o $(TEST_NAME)
+	@valgrind ./$(TEST_NAME)
+run_valgrind: re
+	@valgrind ./$(NAME)
+
+
+#######################
+.PHONY: all clean fclean re test

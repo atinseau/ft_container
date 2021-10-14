@@ -2,6 +2,9 @@
 #define __Iterator_H__
 
 #include <iostream>
+#include "../utils/stl.hpp"
+#include "../utils/function.hpp"
+
 
 namespace fd
 {
@@ -17,25 +20,23 @@ namespace fd
 
 	template <
 		class T,
-		class Category,
-		class Distance = std::ptrdiff_t,
-		class Pointer = T*,
-		class Reference = T&
+		bool B
 	>
 	struct Iterator
 	{
-		typedef Category iterator_category;
-		typedef Distance difference_type;
-		typedef T value_type;
-		typedef T* pointer;
-		typedef T& reference;
+		typedef std::random_access_iterator_tag				iterator_category;
+		typedef std::ptrdiff_t								difference_type;
+		typedef T											value_type;
+		typedef typename is_const<B, T&, const T&>::type	reference;
+		typedef typename is_const<B, T*, const T*>::type	pointer;
+		typedef T*											_ptr;
 
 		private:
-			pointer m_ptr;
+			_ptr m_ptr;
 
 		public:
-			explicit Iterator(pointer ptr): m_ptr(ptr) {}
-			Iterator(const Iterator & rhs): m_ptr(rhs.m_ptr) {}
+			Iterator(_ptr ptr = 0): m_ptr(ptr) {}
+			Iterator(const Iterator<T, false> & rhs): m_ptr(rhs.getInterval()) {}
 
 			reference operator *(void) const { return *m_ptr; }
 			pointer operator->(void) const { return m_ptr; }
@@ -65,10 +66,21 @@ namespace fd
 			Iterator & operator-=(difference_type __n) { m_ptr -= __n; return *this; }
 			reference operator[](difference_type __n) const { return m_ptr[__n]; }
 
-			
+			Iterator& operator=(const Iterator& assign)
+			{
+				if (this != &assign)
+					m_ptr = assign.m_ptr;
+				return (*this);
+			}
 
-			friend bool operator==(const Iterator &a, const Iterator &b) { return a.m_ptr == b.m_ptr; }
-			friend bool operator!=(const Iterator &a, const Iterator &b) { return a.m_ptr != b.m_ptr; }
+			T * getInterval() const { return m_ptr; }
+
+			bool operator==(const Iterator& it) const	{ return (it.m_ptr == m_ptr); }
+			bool operator!=(const Iterator& it) const	{ return (it.m_ptr != m_ptr); }
+			bool operator<(const Iterator& it) const	{ return (it.m_ptr > m_ptr); }
+			bool operator>(const Iterator& it) const	{ return (it.m_ptr < m_ptr); }
+			bool operator<=(const Iterator& it) const	{ return (it.m_ptr >= m_ptr); }
+			bool operator>=(const Iterator& it) const	{ return (it.m_ptr <= m_ptr); }
 	};
 };
 
