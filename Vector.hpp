@@ -4,6 +4,7 @@
 #include <limits>
 #include <exception>
 #include <stdexcept>
+#include <algorithm>
 
 #include "Iterators/Iterator.hpp"
 
@@ -107,7 +108,10 @@ namespace fd
 			{
 				_clear_capacity(std::distance(first, last));
 				for (; first != last; first++)
-					_alloc.construct(&_c[_size++], *first);
+				{
+					_alloc.construct(&_c[_size], *first);
+					_size++;
+				}
 			}
 
 			void			push_back(const value_type &value)
@@ -139,21 +143,21 @@ namespace fd
 
 			iterator		insert( iterator pos, const value_type value )
 			{
-				int	index = 0;
-				int i = _size;
-
-				index = (!_capacity ? 0 : static_cast<int>(&(*pos) - &_c[0]));
-				if (_size + 1 > _capacity)
-					reserve(!_capacity ? 1 : _capacity * 2);
-				_size += 1;
-			
-				while(i >= index)
+				if (fd::range_address(_c, _size, &(*pos)) || (!_c && !_size && !_capacity))
 				{
-					_c[i + 1] = _c[i];
-					i--;
+					int index = &(*pos) - &_c[0];
+					if (_size + 1 > _capacity)
+						reserve((!_capacity) ? 1 : _capacity * 2);
+					
+					for (int i = _size - 1; i >= index; i--)
+						_alloc.construct(&_c[i + 1], _c[i]);
+
+					_alloc.construct(&_c[index], value);
+					_size += 1;
+					return (iterator(&_c[index]));
 				}
-				_c[index] = value;
-				return (iterator(&_c[index]));
+				else
+					throw std::logic_error("Invalid iterator for insertion....!");
 			}
 
 			void			insert( iterator pos, size_type count, const T& value )
@@ -208,8 +212,10 @@ namespace fd
 			{
 				if (fd::range_address(_c, _size, &(*pos)))
 				{
-					for (size_type i = &(*pos) - _c; i < _size; i++)
-						_c[i] = _c[i + 1];
+					size_type coord = &(*pos) - _c;
+
+					for (; coord < _size - 1; coord++)
+						_c[coord] = _c[coord + 1];
 					_size -= 1;
 				}
 				return (iterator(pos.getInterval()));
@@ -291,9 +297,12 @@ namespace fd
 			void _clear_capacity(size_type count)
 			{
 				clear();
-				if (_capacity)
-					_alloc.deallocate(_c, _capacity);
 				reserve(count);
+			}
+
+			void _erase_range()
+			{
+				
 			}
 	};
 };

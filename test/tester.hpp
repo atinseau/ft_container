@@ -4,9 +4,12 @@
 #include <iostream>
 #include <sys/time.h>
 #include <vector>
+#include <sstream>
 #include <iostream>
 #include "../Vector.hpp"
 #define MAX_SIZE 100000000
+
+double mesure(int (*f)(void));
 
 template < typename T >
 struct foo
@@ -36,7 +39,26 @@ std::ostream & operator<<(std::ostream &o , const foo<T> & rhs)
 	return o;
 }
 
-double mesure(int (*f)(void));
+template < typename T >
+std::string to_string(const T& n)
+{
+	std::ostringstream stm ;
+	stm << n ;
+	return stm.str();
+}
+
+template < typename T >
+char * to_str(const T& n)
+{
+	std::allocator<char> alloc;
+	std::string tmp = to_string(n);
+	char *str = alloc.allocate(tmp.length() + 1);
+	for(size_t i = 0; i < tmp.length(); i++)
+		str[i] = tmp[i];
+	str[tmp.length()] = '\0';
+
+	return (str);
+}
 
 template <typename Va, typename Vb>
 bool compare(Va &v1, Vb &v2, 
@@ -48,6 +70,9 @@ bool compare(Va &v1, Vb &v2,
 		return false;
 	for (size_t i = 0; i < v1.size(); i++)
 	{
+		if (!v1[i] && !v2[i])
+			return (true);
+
 		if (*v1[i] != *v2[i])
 			return false;
 	}
@@ -131,34 +156,43 @@ void vprint(T & v, typename fd::enable_if<!fd::is_pointer<typename T::value_type
 }
 
 
+// VALUE GENERATOR
 
-template <typename T>
-int push_bench(void)
+template <typename InputType>
+class Generator
 {
-	T v1 ;
+	private:
+		InputType _input;
+	
+	public:
+		Generator(InputType V): _input(V) {}
+		Generator(void): _input(InputType()) {}
 
-	for(int i = 0; i < MAX_SIZE; i++)
-		v1.push_back("salut tout le monde");
-	return (1);
-}
+		template <typename T>
+		T get (typename fd::enable_if<fd::is_same<InputType, int>::value && fd::is_same<T, std::string>::value >::type = 0)
+		{
+			return (to_string(_input) + " voici un vrai valeur...");
+		}
 
-template<typename T>
-int insert_bench(void)
-{
-	T v1 (MAX_SIZE, 10);
+		template <typename T>
+		T get (typename fd::enable_if<fd::is_same<InputType, int>::value && fd::is_same<T, char *>::value >::type = 0)
+		{
+			return (to_str(_input));
+		}
 
-	std::vector<int> needed;
+		template <typename T>
+		T get (typename fd::enable_if<fd::is_same<InputType, int>::value && fd::is_same<T, foo<int> *>::value >::type = 0)
+		{
+			return (new foo<int>(_input));
+		}
 
-	for(int i = 0; i < 10; i++)
-		needed.push_back(i);
 
-	while(needed.size() != 0)
-	{
-		v1.insert(v1.begin() + (v1.size() / 2), 3, needed.back());
-		needed.pop_back();
-	}
-	return (1);
-}
+		template <typename T>
+		T get (typename fd::enable_if<fd::is_integral<T>::value && fd::is_same<InputType, int>::value >::type = 0)
+		{
+			return (static_cast<T>(_input));
+		}
+};
 
 
 

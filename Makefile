@@ -9,11 +9,28 @@ NAME=Container
 OLD= -std=c++98
 FLAGS= -Wall -Wextra -Wall -g -std=c++98
 
-SRCS=	main.cpp 
-TEST= test/vector.cpp \
-	  test/utils.cpp
+SRCS=	main.cpp test/utils.cpp
+
+
+#######################
+VECTOR_TEST=	test/vector/assign.cpp \
+				test/vector/clear.cpp \
+				test/vector/constructor.cpp \
+				test/vector/erase.cpp \
+				test/vector/insert.cpp \
+				test/vector/iterator.cpp \
+				test/vector/other.cpp \
+				test/vector/pop_back.cpp \
+				test/vector/push_back.cpp \
+				test/vector/reserve.cpp \
+				test/vector/resize.cpp
+
+TEST=	test/utils.cpp \
+		$(VECTOR_TEST)
 TEST_NAME= test.out
 #######################
+
+
 OBJS=${SRCS:.cpp=.o}
 #######################
 .cpp.o:
@@ -34,10 +51,10 @@ fclean: clean
 re: fclean all
 #######################
 test:
-	@docker build -t criterion -q test &> /dev/null
+	@docker build -t criterion -q test/. &> /dev/null
 	@docker run -it --env COMMAND=run_test -v $$PWD:/tmp/project criterion
 valgrind:
-	@docker build -t criterion -q test &> /dev/null
+	@docker build -t criterion -q test/. &> /dev/null
 	@docker run -it --env COMMAND=run_valgrind -v $$PWD:/tmp/project criterion
 
 # ONLY IN CONTAINER

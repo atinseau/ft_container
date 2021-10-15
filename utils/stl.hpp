@@ -50,6 +50,8 @@ namespace fd
 	template <>
 	struct is_integral<char> { static const bool value = true; };
 	template <>
+	struct is_integral<float> { static const bool value = true; };
+	template <>
 	struct is_integral<short> { static const bool value = true; };
 	template <>
 	struct is_integral<int> { static const bool value = true; };
