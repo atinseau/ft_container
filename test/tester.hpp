@@ -171,7 +171,7 @@ class Generator
 		template <typename T>
 		T get (typename fd::enable_if<fd::is_same<InputType, int>::value && fd::is_same<T, std::string>::value >::type = 0)
 		{
-			return (to_string(_input) + " voici un vrai valeur...");
+			return (to_string(_input) + " voici une vrai valeur...");
 		}
 
 		template <typename T>
