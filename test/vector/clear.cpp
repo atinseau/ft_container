@@ -5,7 +5,7 @@ template <typename typeTest>
 bool empty_basic()
 {
 	std::vector<typeTest>	v1;
-	fd::vector<typeTest>	v2;
+	ft::vector<typeTest>	v2;
 
 	v1.clear();
 	v2.clear();
@@ -19,7 +19,7 @@ bool not_empty_basic()
 	bool diff_1 = false, diff_2 = false;
 
 	std::vector<typeTest>	v1 (100);
-	fd::vector<typeTest>	v2 (100);
+	ft::vector<typeTest>	v2 (100);
 	v1.clear();
 	v2.clear();
 	diff_1 = equal(v1, v2);

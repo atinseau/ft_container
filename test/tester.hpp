@@ -6,7 +6,7 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
-#include "../Vector.hpp"
+#include "../vector.hpp"
 #define MAX_SIZE 100000000
 
 double mesure(int (*f)(void));
@@ -19,7 +19,7 @@ struct foo
 	foo (T dyn): str("salut tout le monde"), _dynamic(dyn) {}
 	~foo(void) {}
 
-	T getDynamic(void) const { return _dynamic; }
+	T m(void) const { return _dynamic; }
 
 	bool operator!=(const foo &rhs) const
 	{
@@ -35,7 +35,7 @@ struct foo
 template < typename T >
 std::ostream & operator<<(std::ostream &o , const foo<T> & rhs)
 {
-	o << rhs.str << ", " << rhs.getDynamic();
+	o << rhs.str << ", " << rhs.m();
 	return o;
 }
 
@@ -62,8 +62,8 @@ char * to_str(const T& n)
 
 template <typename Va, typename Vb>
 bool compare(Va &v1, Vb &v2, 
-		typename fd::enable_if<fd::is_same<typename Va::value_type, typename Vb::value_type>::value>::type* = 0,
-		typename fd::enable_if<fd::is_pointer<typename Va::value_type>::value>::type* = 0
+		typename ft::enable_if<ft::is_same<typename Va::value_type, typename Vb::value_type>::value>::type* = 0,
+		typename ft::enable_if<ft::is_pointer<typename Va::value_type>::value>::type* = 0
 	) 
 {
 	if (v1.size() != v2.size())
@@ -82,8 +82,8 @@ bool compare(Va &v1, Vb &v2,
 
 template <typename Va, typename Vb>
 bool compare(Va &v1, Vb &v2,
-		typename fd::enable_if<fd::is_same<typename Va::value_type, typename Vb::value_type>::value>::type* = 0,
-		typename fd::enable_if<!fd::is_pointer<typename Va::value_type>::value>::type* = 0
+		typename ft::enable_if<ft::is_same<typename Va::value_type, typename Vb::value_type>::value>::type* = 0,
+		typename ft::enable_if<!ft::is_pointer<typename Va::value_type>::value>::type* = 0
 	) 
 {
 	if (v1.size() != v2.size())
@@ -134,7 +134,7 @@ void vdebug(T & v)
 
 
 template <typename T>
-void vprint(T & v, typename fd::enable_if<fd::is_pointer<typename T::value_type>::value >::type* = 0)
+void vprint(T & v, typename ft::enable_if<ft::is_pointer<typename T::value_type>::value >::type* = 0)
 {
 	for(typename T::iterator it = v.begin(); it != v.end(); it++)
 	{
@@ -147,11 +147,11 @@ void vprint(T & v, typename fd::enable_if<fd::is_pointer<typename T::value_type>
 }
 
 template <typename T>
-void vprint(T & v, typename fd::enable_if<!fd::is_pointer<typename T::value_type>::value >::type* = 0)
+void vprint(T & v, typename ft::enable_if<!ft::is_pointer<typename T::value_type>::value >::type* = 0)
 {
-	for(typename T::iterator it = v.begin(); it != v.end(); it++)
+	for (typename T::size_type i = 0; i < v.size(); i++)
 	{
-		std::cout << *it << std::endl;
+		std::cout << v[i] << std::endl;
 	}
 }
 
@@ -169,26 +169,26 @@ class Generator
 		Generator(void): _input(InputType()) {}
 
 		template <typename T>
-		T get (typename fd::enable_if<fd::is_same<InputType, int>::value && fd::is_same<T, std::string>::value >::type = 0)
+		T get (typename ft::enable_if<ft::is_same<InputType, int>::value && ft::is_same<T, std::string>::value >::type = 0)
 		{
 			return (to_string(_input) + " voici un vrai valeur...");
 		}
 
 		template <typename T>
-		T get (typename fd::enable_if<fd::is_same<InputType, int>::value && fd::is_same<T, char *>::value >::type = 0)
+		T get (typename ft::enable_if<ft::is_same<InputType, int>::value && ft::is_same<T, char *>::value >::type = 0)
 		{
 			return (to_str(_input));
 		}
 
 		template <typename T>
-		T get (typename fd::enable_if<fd::is_same<InputType, int>::value && fd::is_same<T, foo<int> *>::value >::type = 0)
+		T get (typename ft::enable_if<ft::is_same<InputType, int>::value && ft::is_same<T, foo<int> *>::value >::type = 0)
 		{
 			return (new foo<int>(_input));
 		}
 
 
 		template <typename T>
-		T get (typename fd::enable_if<fd::is_integral<T>::value && fd::is_same<InputType, int>::value >::type = 0)
+		T get (typename ft::enable_if<ft::is_integral<T>::value && ft::is_same<InputType, int>::value >::type = 0)
 		{
 			return (static_cast<T>(_input));
 		}

@@ -5,7 +5,7 @@ template <typename typeTest>
 bool empty_basic ()
 {
 	std::vector<typeTest> v1;
-	fd::vector<typeTest> v2;
+	ft::vector<typeTest> v2;
 
 	bool fail_1 = false, fail_2 = false;
 
@@ -26,7 +26,7 @@ template <typename typeTest>
 bool not_empty_basic ()
 {
 	std::vector<typeTest> v1 (10);
-	fd::vector<typeTest> v2 (10);
+	ft::vector<typeTest> v2 (10);
 
 	for(int i = 0; i < 100; i++)
 	{
@@ -52,7 +52,7 @@ bool empty_with_iterator()
 		db2.push_back(Generator<int>(i).get<typeTest>());
 	}
 	std::vector<typeTest>	v1;
-	fd::vector<typeTest>	v2;
+	ft::vector<typeTest>	v2;
 
 	v1.assign(db1.begin(), db1.end() - 10);
 	v2.assign(db2.begin(), db2.end() - 10);
@@ -75,7 +75,7 @@ bool not_empty_with_iterator()
 	}
 
 	std::vector<typeTest>	v1 (140);
-	fd::vector<typeTest>	v2 (140);
+	ft::vector<typeTest>	v2 (140);
 
 	v1.assign(db1.begin(), db1.end() - 10);
 	v2.assign(db2.begin(), db2.end() - 10);

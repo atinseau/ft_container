@@ -1,7 +1,7 @@
 #ifndef __STL_H__
 #define __STL_H__
 
-namespace fd 
+namespace ft 
 {
 	/*
 	** enable_if comportement usefully for choose right function template during 
@@ -35,6 +35,11 @@ namespace fd
 	struct is_pointer { static const bool value = false; };
 	template<typename T>
 	struct is_pointer<T*> { static const bool value = true; };
+	template<typename T>
+	struct is_pointer<const T> { static const bool value = false; };
+	template<typename T>
+	struct is_pointer<const T*> { static const bool value = true; };
+
 
 	/*
 	**
@@ -69,9 +74,6 @@ namespace fd
 	struct is_integral<unsigned long> { static const bool value = true; };
 	template <>
 	struct is_integral<unsigned long long> { static const bool value = true; };
-
-
-	
 }
 
 #endif // __STL_H__

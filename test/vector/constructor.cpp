@@ -5,7 +5,7 @@ template <typename typeTest>
 bool empty_basic() 
 {
 	std::vector<typeTest> v1;
-	fd::vector<typeTest> v2;
+	ft::vector<typeTest> v2;
 
 	return equal(v1, v2);
 }
@@ -14,10 +14,10 @@ template <typename typeTest>
 bool filled_basic() 
 {
 	std::vector<typeTest> v1_1 (10);
-	fd::vector<typeTest> v2_1 (10);
+	ft::vector<typeTest> v2_1 (10);
 
 	std::vector<typeTest> v1_2 (10, Generator<int>(150660).get<typeTest>());
-	fd::vector<typeTest> v2_2 (10, Generator<int>(150660).get<typeTest>());
+	ft::vector<typeTest> v2_2 (10, Generator<int>(150660).get<typeTest>());
 
 	return equal(v1_1, v2_1) && equal(v1_2, v2_2);
 }

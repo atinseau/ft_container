@@ -6,7 +6,7 @@
 #include "../utils/function.hpp"
 
 
-namespace fd
+namespace ft
 {
 	template< class Iter>
 	struct iterator_traits
@@ -35,16 +35,16 @@ namespace fd
 			_ptr m_ptr;
 
 		public:
-			Iterator(_ptr ptr = 0): m_ptr(ptr) {}
-			Iterator(const Iterator<T, false> & rhs): m_ptr(rhs.getInterval()) {}
+			explicit Iterator(_ptr ptr = 0): m_ptr(ptr) {}
+			Iterator(const Iterator<T, false> & rhs): m_ptr(rhs.base()) {}
 
 			reference operator *(void) const { return *m_ptr; }
 			pointer operator->(void) const { return m_ptr; }
 
-			Iterator operator+(difference_type __n) { return Iterator(m_ptr + __n); }
-			Iterator operator-(difference_type __n) { return Iterator(m_ptr - __n); }
-			difference_type operator-(const Iterator &it) { return m_ptr - it.m_ptr; }
-			difference_type operator+(const Iterator &it) { return m_ptr + it.m_ptr; }
+			Iterator operator+(difference_type __n) const { return Iterator(m_ptr + __n); }
+			Iterator operator-(difference_type __n) const { return Iterator(m_ptr - __n); }
+			difference_type operator-(const Iterator &it) const { return m_ptr - it.m_ptr; }
+			difference_type operator+(const Iterator &it) const { return m_ptr + it.m_ptr; }
 
 			Iterator& operator++(void) { m_ptr++; return *this; }
 			Iterator operator++(int)
@@ -73,7 +73,7 @@ namespace fd
 				return (*this);
 			}
 
-			T * getInterval() const { return m_ptr; }
+			T * base() const { return m_ptr; }
 
 			bool operator==(const Iterator& it) const	{ return (it.m_ptr == m_ptr); }
 			bool operator!=(const Iterator& it) const	{ return (it.m_ptr != m_ptr); }
@@ -83,5 +83,27 @@ namespace fd
 			bool operator>=(const Iterator& it) const	{ return (it.m_ptr <= m_ptr); }
 	};
 };
+
+// OUTSIDE OVERLOAD
+
+template<typename T> 
+ft::Iterator<T, false> operator+(int offset, ft::Iterator<T, false> & rhs) { return (ft::Iterator<T, false>(rhs.base() + offset)); } 
+template<typename T> 
+ft::Iterator<T, false> operator-(int offset, ft::Iterator<T, false> & rhs) { return (ft::Iterator<T, false>(rhs.base() - offset)); } 
+
+
+
+template <typename T>
+bool operator!=(const ft::Iterator<T, false>& lhs, const ft::Iterator<T, true>& rhs) { return lhs.base() != rhs.base(); }
+template <typename T>
+bool operator==(const ft::Iterator<T, false>& lhs, const ft::Iterator<T, true>& rhs) { return lhs.base() == rhs.base(); }
+template <typename T>
+bool operator>(const ft::Iterator<T, false>& lhs, const ft::Iterator<T, true>& rhs) { return lhs.base() > rhs.base(); }
+template <typename T>
+bool operator<(const ft::Iterator<T, false>& lhs, const ft::Iterator<T, true>& rhs) { return lhs.base() < rhs.base(); }
+template <typename T>
+bool operator>=(const ft::Iterator<T, false>& lhs, const ft::Iterator<T, true>& rhs) { return lhs.base() >= rhs.base(); }
+template <typename T>
+bool operator<=(const ft::Iterator<T, false>& lhs, const ft::Iterator<T, true>& rhs) { return lhs.base() <= rhs.base(); }
 
 #endif // __Iterator_H__

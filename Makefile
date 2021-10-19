@@ -50,9 +50,10 @@ fclean: clean
 #######################
 re: fclean all
 #######################
-test:
-	@docker build -t criterion -q test/. &> /dev/null
-	@docker run -it --env COMMAND=run_test -v $$PWD:/tmp/project criterion
+test: re
+	cd containers_test && ./do.sh
+# @docker build -t criterion -q test/. &> /dev/null
+# @docker run -it --env COMMAND=run_test -v $$PWD:/tmp/project criterion
 valgrind:
 	@docker build -t criterion -q test/. &> /dev/null
 	@docker run -it --env COMMAND=run_valgrind -v $$PWD:/tmp/project criterion

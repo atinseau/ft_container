@@ -5,7 +5,7 @@ template <typename typeTest>
 bool empty_basic()
 {
 	std::vector<typeTest> v1;
-	fd::vector<typeTest> v2;
+	ft::vector<typeTest> v2;
 
 	for(int i = 0; i < 100; i++)
 	{
@@ -31,7 +31,7 @@ template <typename typeTest>
 bool not_empty_basic()
 {
 	std::vector<typeTest> v1 (1000);
-	fd::vector<typeTest> v2 (1000);
+	ft::vector<typeTest> v2 (1000);
 
 	for(int i = 0; i < 100; i++)
 	{

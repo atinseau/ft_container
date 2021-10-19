@@ -1,13 +1,13 @@
 #include "../tester.hpp"
 #include <criterion/criterion.h>
+
 template <typename typeTest>
 bool insert_on_vector()
 {
-	bool test_1 = false;
-	bool test_2 = false;
+	bool test_1 = false, test_2 = false;
 	{
 		std::vector<typeTest> v1;
-		fd::vector<typeTest> v2;
+		ft::vector<typeTest> v2;
 
 		for (int i = 0; i < 100; i++)
 		{
@@ -19,7 +19,7 @@ bool insert_on_vector()
 	}
 	{
 		std::vector<typeTest> v1 (100);
-		fd::vector<typeTest> v2 (100);
+		ft::vector<typeTest> v2 (100);
 
 		for (int i = 0; i < 100; i++)
 		{
@@ -32,12 +32,16 @@ bool insert_on_vector()
 	return (test_1 && test_2);
 }
 
-Test(vector, insert_on_vector)
-{
-	cr_assert(insert_on_vector<int>(), "Vector differ on int....!");
-	cr_assert(insert_on_vector<float>(), "Vector differ on float....!");
-	cr_assert(insert_on_vector<std::string>(), "Vector differ on std::string....!");
-	cr_assert(insert_on_vector<char *>(), "Vector differ on char *....!");
-	cr_assert(insert_on_vector<foo<int>* >(), "Vector differ on int....!");
-	cr_assert(insert_on_vector<long>(), "Vector differ on bool....!");
-}
+/*** TEST 1 ***/
+Test(vector_insert, insert_on_vector_int)
+{ cr_assert(insert_on_vector<int>(), "Vector differ on int....!"); }
+Test(vector_insert, insert_on_vector_float)
+{ cr_assert(insert_on_vector<float>(), "Vector differ on float....!"); }
+Test(vector_insert, insert_on_vector_string)
+{ cr_assert(insert_on_vector<std::string>(), "Vector differ on std::string....!"); }
+Test(vector_insert, insert_on_vector_char_ptr)
+{ cr_assert(insert_on_vector<char *>(), "Vector differ on char *....!"); }
+Test(vector_insert, insert_on_vector_foo_int_ptr)
+{ cr_assert(insert_on_vector<foo<int>* >(), "Vector differ on int....!"); }
+Test(vector_insert, insert_on_vector_long)
+{ cr_assert(insert_on_vector<long>(), "Vector differ on bool....!"); }
