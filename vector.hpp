@@ -6,8 +6,15 @@
 #include <stdexcept>
 #include <algorithm>
 
-#include "Iterators/Iterator.hpp"
-#include "Iterators/ReverseIterator.hpp"
+#ifndef ITERATOR_INCLUDE
+ #define ITERATOR_INCLUDE
+ #include "Iterators/Iterator.hpp"
+#endif
+
+#ifndef REVERSE_INCLUDE
+ #define REVERSE_INCLUDE
+ #include "Iterators/ReverseIterator.hpp"
+#endif
 
 namespace ft
 {
@@ -227,6 +234,17 @@ namespace ft
 				_size = count;
 			}
 
+			void resize(size_type count, const value_type& value )
+			{
+				size_type old_size = _size;
+				resize(count);
+				if (count > old_size)
+				{
+					for (; old_size < count; old_size++)
+						_alloc.construct(_c + old_size, value);
+				}
+			}
+
 			template <class InputIt>
 			iterator erase(InputIt pos, 
 				typename ft::enable_if
@@ -246,6 +264,22 @@ namespace ft
 
 			iterator erase(iterator first, iterator last) { return _erase_range(first, last); }
 			iterator erase(const_iterator first, const_iterator last) { return _erase_range(first, last); }
+
+			void swap( vector& other )
+			{
+				swap(_c, other._c);
+				swap(_alloc, other._alloc);
+				swap(_capacity, other._capacity);
+				swap(_size, other._size);
+			}
+
+			template <typename Any>
+			void swap(Any & a, Any & b)
+			{
+				Any tmp = a;
+				a = b;
+				b = tmp;
+			}
 
 			// GETTER
 			/**************************************************/
@@ -282,11 +316,11 @@ namespace ft
 			iterator				end(void) 				{ return iterator(_c+ _size); }
 			const_iterator			end(void) 		const	{ return const_iterator(_c + _size); }
 
-			reverse_iterator		rbegin(void)			{ return reverse_iterator(_c + (_size - 1)); }
-			const_reverse_iterator	rbegin(void)	const	{ return const_reverse_iterator(_c + (_size - 1)); }
+			reverse_iterator		rbegin(void)			{ return reverse_iterator(_c + (_size)); }
+			const_reverse_iterator	rbegin(void)	const	{ return const_reverse_iterator(_c + (_size)); }
 
-			reverse_iterator		rend(void)				{ return reverse_iterator(_c - 1); }
-			reverse_iterator		rend(void)		const	{ return const_reverse_iterator(_c - 1); }
+			reverse_iterator		rend(void)				{ return reverse_iterator(_c); }
+			reverse_iterator		rend(void)		const	{ return const_reverse_iterator(_c); }
 
 
 			// OVERLOAD
@@ -358,6 +392,8 @@ namespace ft
 					_size++;
 				}
 			}
+
+			friend void swap (vector& x, vector& y) { x.swap(y); }
 	};
 
 	template <typename T, class Alloc >

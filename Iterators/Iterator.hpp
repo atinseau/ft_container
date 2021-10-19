@@ -5,9 +5,20 @@
 #include "../utils/stl.hpp"
 #include "../utils/function.hpp"
 
+#ifndef REVERSE_INCLUDE
+ #define REVERSE_INCLUDE
+ #include "ReverseIterator.hpp"
+#endif
 
 namespace ft
 {
+
+	template <
+		class T,
+		bool B
+	>
+	struct ReverseIterator;
+
 	template< class Iter>
 	struct iterator_traits
 	{
@@ -37,6 +48,8 @@ namespace ft
 		public:
 			explicit Iterator(_ptr ptr = 0): m_ptr(ptr) {}
 			Iterator(const Iterator<T, false> & rhs): m_ptr(rhs.base()) {}
+			explicit Iterator(const ReverseIterator<T, false> & rhs): m_ptr(rhs.base()) {}
+
 
 			reference operator *(void) const { return *m_ptr; }
 			pointer operator->(void) const { return m_ptr; }
@@ -81,6 +94,8 @@ namespace ft
 			bool operator>(const Iterator& it) const	{ return (it.m_ptr < m_ptr); }
 			bool operator<=(const Iterator& it) const	{ return (it.m_ptr >= m_ptr); }
 			bool operator>=(const Iterator& it) const	{ return (it.m_ptr <= m_ptr); }
+	
+			bool operator==(const pointer& ptr) const { return (m_ptr == ptr); }
 	};
 };
 

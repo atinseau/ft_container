@@ -21,6 +21,12 @@ struct foo
 
 	T m(void) const { return _dynamic; }
 
+	foo& operator=(T dyn)
+	{
+		_dynamic = dyn;
+		return (*this);
+	}
+
 	bool operator!=(const foo &rhs) const
 	{
 		if (str == rhs.str && _dynamic == _dynamic)
