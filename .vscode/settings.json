@@ -1,0 +1,11 @@
+{
+	"files.associations": {
+		"stack": "cpp",
+		"vector": "cpp",
+		"queue": "cpp",
+		"map": "cpp",
+		"iosfwd": "cpp",
+		"__tree": "cpp",
+		"__node_handle": "cpp"
+	}
+}

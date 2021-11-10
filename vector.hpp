@@ -61,7 +61,6 @@ namespace ft
 						_alloc.construct(&_c[_size], *it);
 						_size++;
 					}
-
 				}
 			#endif 
 
@@ -273,14 +272,6 @@ namespace ft
 				swap(_size, other._size);
 			}
 
-			template <typename Any>
-			void swap(Any & a, Any & b)
-			{
-				Any tmp = a;
-				a = b;
-				b = tmp;
-			}
-
 			// GETTER
 			/**************************************************/
 
@@ -391,6 +382,14 @@ namespace ft
 					_alloc.construct(_c + _size, *it);
 					_size++;
 				}
+			}
+
+			template <typename Any>
+			void swap(Any & a, Any & b)
+			{
+				Any tmp = a;
+				a = b;
+				b = tmp;
 			}
 
 			friend void swap (vector& x, vector& y) { x.swap(y); }
