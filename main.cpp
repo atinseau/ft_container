@@ -3,23 +3,22 @@
 #include <map>
 #include <iostream>
 
-#include "utils/pair.hpp"
-#include "utils/tree.hpp"
+#include "map.hpp"
 
 int main(void)
 {
-	ft::tree<int> t1;
+	ft::map<int, int> m1; 
 
-	t1.insert_node(10);
-	t1.insert_node(11);
-	t1.insert_node(15)
-	t1.insert_node(5);
+	m1.insert(ft::make_pair(1, 12));
+	m1.insert(ft::make_pair(1, 2));
+	m1.insert(ft::make_pair(1, 3));
+	m1.insert(ft::make_pair(1, 5));
+	m1.insert(ft::make_pair(1, 7));
+	m1.insert(ft::make_pair(1, 4));
 
-	std::cout << t1.size() << std::endl;
+	m1._sub.draw();
 
-	// t1.print();
-
-	std::cout << t1.data()->data << std::endl;
+	std::cout << m1.size() << std::endl;
 
 	return (0);
 } 
