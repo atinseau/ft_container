@@ -1,3 +1,5 @@
+#ifndef __MAP_H__
+#define __MAP_H__
 
 #include <iostream>
 #include "utils/pair.hpp"
@@ -31,6 +33,12 @@ namespace ft
 				_sub()
 			{}
 
+			map(const map& other) :
+				_comp(other._comp),
+				_alloc(other._alloc),
+				_sub(other._sub)
+			{}
+
 			void insert( const value_type& value)
 			{
 				_sub.insert(value);
@@ -38,12 +46,36 @@ namespace ft
 
 			size_type size() const { return (_sub.size()); }
 
+
+			reference at(const key_type & k)
+			{ return (_sub.findByKey(make_pair(k, mapped_type()))); }
+
+			const_reference at(const key_type & k) const
+			{ return (_sub.findByKey(make_pair(k, mapped_type()))); }
+
+			bool empty(void) const
+			{ return (_sub.size() == 0); }
+
+
+			// OVERLOAD
+
+			reference operator[](const key_type & k)
+			{ return (at(k)); }
+
+			const_reference operator[](const key_type & k) const 
+			{ return (at(k)); }
+			
+
 		private:
 			key_compare	_comp;
 			allocator_type _alloc;
+
+
 
 		public:
 			tree<value_type, Compare> _sub;
 			
 	};
 };
+
+#endif // __MAP_H__

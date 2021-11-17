@@ -5,20 +5,25 @@
 
 #include "map.hpp"
 
+template <class Map>
+void mdebug(Map & m)
+{
+	std::cout << "Empty: " << (m.empty() ? "True": "False") << std::endl;
+	std::cout << "Size: " << m.size() << std::endl;
+}
+
 int main(void)
 {
 	ft::map<int, int> m1; 
+;
+	// mdebug(m1);
 
-	m1.insert(ft::make_pair(1, 12));
-	m1.insert(ft::make_pair(1, 2));
-	m1.insert(ft::make_pair(1, 3));
-	m1.insert(ft::make_pair(1, 5));
-	m1.insert(ft::make_pair(1, 7));
-	m1.insert(ft::make_pair(1, 4));
+	m1.insert(ft::make_pair(1, 13));
+	m1.insert(ft::make_pair(1, 13));
 
-	m1._sub.draw();
-
-	std::cout << m1.size() << std::endl;
+	std::cout << m1[1] << std::endl;
+	
+	mdebug(m1);
 
 	return (0);
 } 

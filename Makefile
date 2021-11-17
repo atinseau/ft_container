@@ -9,26 +9,7 @@ NAME=Container
 OLD= -std=c++98
 FLAGS= -Wall -Wextra -Wall -g -std=c++98
 
-SRCS=	main.cpp test/utils.cpp
-
-
-#######################
-VECTOR_TEST=	test/vector/assign.cpp \
-				test/vector/clear.cpp \
-				test/vector/constructor.cpp \
-				test/vector/erase.cpp \
-				test/vector/insert.cpp \
-				test/vector/iterator.cpp \
-				test/vector/other.cpp \
-				test/vector/pop_back.cpp \
-				test/vector/push_back.cpp \
-				test/vector/reserve.cpp \
-				test/vector/resize.cpp
-
-TEST=	test/utils.cpp \
-		$(VECTOR_TEST)
-TEST_NAME= test.out
-#######################
+SRCS=	main.cpp 
 
 
 OBJS=${SRCS:.cpp=.o}
