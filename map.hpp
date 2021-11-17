@@ -3,7 +3,9 @@
 
 #include <iostream>
 #include "utils/pair.hpp"
+#include "utils/stl.hpp"
 #include "utils/tree.hpp"
+
 
 namespace ft
 {
@@ -29,51 +31,16 @@ namespace ft
 		public:
 			explicit map( const key_compare& comp =  key_compare() , const Allocator& alloc = Allocator()) :
 				_comp(comp),
-				_alloc(alloc),
-				_sub()
-			{}
+				_alloc(alloc) {}
 
 			map(const map& other) :
 				_comp(other._comp),
-				_alloc(other._alloc),
-				_sub(other._sub)
-			{}
+				_alloc(other._alloc) {}
 
-			void insert( const value_type& value)
-			{
-				_sub.insert(value);
-			}
-
-			size_type size() const { return (_sub.size()); }
-
-
-			reference at(const key_type & k)
-			{ return (_sub.findByKey(make_pair(k, mapped_type()))); }
-
-			const_reference at(const key_type & k) const
-			{ return (_sub.findByKey(make_pair(k, mapped_type()))); }
-
-			bool empty(void) const
-			{ return (_sub.size() == 0); }
-
-
-			// OVERLOAD
-
-			reference operator[](const key_type & k)
-			{ return (at(k)); }
-
-			const_reference operator[](const key_type & k) const 
-			{ return (at(k)); }
-			
-
+	
 		private:
 			key_compare	_comp;
 			allocator_type _alloc;
-
-
-
-		public:
-			tree<value_type, Compare> _sub;
 			
 	};
 };
