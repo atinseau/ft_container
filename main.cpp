@@ -10,26 +10,12 @@ int main(void)
 {
 
 
-	ft::RBTree<int, int> tree;
+	ft::RBTree<ft::pair<int, int> > tree;
 
-	tree.insert(ft::make_pair(50, 1));
-	tree.insert(ft::make_pair(75, 3));
-	tree.insert(ft::make_pair(25, 2));
+	for (int i = 0; i < 1000000; i++)
+		tree.insert(ft::make_pair<int, int>(i, i));
 
-
-	tree.insert(ft::make_pair(12, 4));
-	tree.insert(ft::make_pair(30, 5));
-
-	tree.insert(ft::make_pair(60, 6));
-
-	
-	tree.insert(ft::make_pair(6, 7));
-
-	tree.insert(ft::make_pair(70, 9));
-
-	tree.delete_node(75);
-
-	tree.draw();
+	tree.delete_node(ft::make_pair<int, int>(1000000, 1000000));
 
 	return (0);
 } 

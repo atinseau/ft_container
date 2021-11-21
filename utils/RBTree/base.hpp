@@ -53,14 +53,13 @@ namespace ft
 	};
 
 	template<
-		class Key, 
 		class T, 
-		class Compare = less<Key>
+		class Compare = less<T>
 	>
 	class RBTreeBase
 	{
 		public:
-			typedef Node<pair<Key, T> >						node_type;
+			typedef Node<T>								node_type;
 			typedef typename node_type::node_pointer	node_pointer;
 			typedef typename node_type::value_type		value_type;
 			typedef typename node_type::pointer			pointer;
@@ -73,15 +72,30 @@ namespace ft
 				_root = _nil;
 			}
 
-			virtual ~RBTreeBase(void) {}
+			virtual ~RBTreeBase(void)
+			{
+				if (_root != _nil)
+					_rfree(_root);
+				delete _nil;
+			}
+
+		private:
+			void _rfree(node_pointer node)
+			{
+				if (node->getLeft() != _nil)
+					_rfree(node->getLeft());
+				if (node->getRight() != _nil)
+					_rfree(node->getRight());
+				delete node;
+			}
 
 		protected:
 			node_pointer	_root;
 			node_pointer	_nil;
 			Compare			_comp;
 
-			virtual node_pointer _create_node(const value_type v, bool color, node_pointer parent = LEAF) const = 0;
-			virtual node_pointer _rinsert(node_pointer node, const value_type v) = 0;
+			virtual node_pointer _create_node(const value_type& v, bool color, node_pointer parent = LEAF) const = 0;
+			virtual node_pointer _rinsert(node_pointer node, const value_type& v) = 0;
 			virtual void _balancing(node_pointer inserted_node) = 0;
 
 			void _rdraw(node_pointer _entry, int space)
@@ -220,15 +234,15 @@ namespace ft
 			 * @param Key key
 			 * @return Node<Key, T>* 
 			 */
-			node_pointer _find_node(node_pointer node, const Key & key)
+			node_pointer _find_node(node_pointer node, const T & v)
 			{
-				if (node->data.first == key || node == _nil)
+				if ((!_comp(node->data, v) && !_comp(v, node->data)) || node == _nil)
 					return node;
 
-				if (_comp(node->data.first, key))
-					return _find_node(node->getRight(), key);
+				if (_comp(node->data, v))
+					return _find_node(node->getRight(), v);
 				else
-					return _find_node(node->getLeft(), key);
+					return _find_node(node->getLeft(), v);
 			}
 
 			node_pointer _minimum(node_pointer node)

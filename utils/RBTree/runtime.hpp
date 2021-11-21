@@ -8,13 +8,12 @@
 namespace ft
 {
 	template <
-		class Key,
 		class T,
-		class Compare = less<Key>
+		class Compare = less<T>
 	>
-	class RBTree : public RBTreeBase<Key, T, Compare>
+	class RBTree : public RBTreeBase<T, Compare>
 	{
-		typedef RBTreeBase<Key, T, Compare> Base;
+		typedef RBTreeBase<T, Compare> Base;
 
 		// Type definitions
 		using typename Base::node_pointer;
@@ -44,10 +43,11 @@ namespace ft
 		 * @param void
 		 */
 		RBTree(void) : Base() {}
+		~RBTree(void) {}
 
 		/**
 		 * @brief Insert a new node into the tree
-		 * @param ft::pair<Key,T> v
+		 * @param T v
 		 */
 		void insert(const value_type v)
 		{
@@ -63,15 +63,16 @@ namespace ft
 		}
 
 		/**
-		 * @brief find one node by key and delete it
+		 * @brief find one node by value and delete it
 		 * 
-		 * @param Key key
+		 * @param const T& s
 		 */
-		void delete_node(const Key & key)
+		void delete_node(const T & s)
 		{
-			node_pointer node = _find_node(_root, key);
+			node_pointer node = _find_node(_root, s);
 
-			_delete(node);
+			if (node != _nil)
+				_delete(node);
 		}
 
 		void draw()
@@ -83,10 +84,12 @@ namespace ft
 		/**
 		 * @brief Create a new node
 		 * 
-		 * @param const ft::pair<Key,T> v
-		 * @return Node<Key, T>* 
+		 * @param const T v
+		 * @param bool color
+		 * @param Node<T>* parent
+		 * @return Node<T>* 
 		 */
-		node_pointer _create_node(const value_type v, bool color, node_pointer parent = LEAF) const
+		node_pointer _create_node(const value_type& v, bool color, node_pointer parent = LEAF) const
 		{
 			node_pointer node = new node_type(v, color, parent, _nil, _nil);
 			return node;
@@ -95,13 +98,13 @@ namespace ft
 		/**
 		 * @brief Recursive insert a new node into the tree
 		 * 
-		 * @param Node<Key,T>* node 
-		 * @param const ft::pair<Key,T> v
-		 * @return Node<Key,T>*
+		 * @param Node<T>* node 
+		 * @param const T v
+		 * @return Node<T>*
 		 */
-		node_pointer _rinsert(node_pointer node, const value_type v)
+		node_pointer _rinsert(node_pointer node, const value_type& v)
 		{
-			if (_comp(node->data.first, v.first))
+			if (_comp(node->data, v))
 			{
 				if (node->getRight() != _nil)
 					return _rinsert(node->getRight(), v);
@@ -120,7 +123,7 @@ namespace ft
 		/**
 		 * @brief Restore the RBTree after insertion
 		 * 
-		 * @param Node<Key,T>* node
+		 * @param Node<T>* k
 		 */
 		void _balancing(node_pointer k)
 		{
@@ -169,6 +172,11 @@ namespace ft
 			}
 		}
 
+		/**
+		 * @brief delete recursively a node from the tree
+		 * 
+		 * @param Node<T>* node
+		 */
 		void _delete(node_pointer k)
 		{
 			if (k->getLeft() == _nil && k->getRight() == _nil)
@@ -206,6 +214,16 @@ namespace ft
 					_root = node;
 				delete k;
 			}
+		}
+
+		/**
+		 * @brief fix the RBTree after deletion
+		 * 
+		 * @param Node<T>* k
+		 */
+		void _delete_balancing(node_pointer k)
+		{
+
 		}
 	};
 

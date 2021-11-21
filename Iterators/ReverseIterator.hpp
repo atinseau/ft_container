@@ -11,7 +11,6 @@
 #endif
 
 
-
 namespace ft
 {
 	template <
