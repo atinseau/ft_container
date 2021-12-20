@@ -12,7 +12,7 @@ namespace ft
 		first_type	first;
 		second_type	second;
 
-		pair(void): first(first_type()), second(second_type()) {}
+		pair(): first(first_type()), second(second_type()) {}
 		pair(const T1 & x, const T2 & y): first(x), second(y) {}
 		pair(const pair & rhs): first(rhs.first), second(rhs.second) {}
 

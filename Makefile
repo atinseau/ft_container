@@ -8,9 +8,7 @@ NAME=Container
 
 OLD= -std=c++98
 FLAGS= -Wall -Wextra -Wall -g -std=c++98
-
-SRCS=	main.cpp 
-
+SRCS=	main.cpp
 
 OBJS=${SRCS:.cpp=.o}
 #######################
@@ -29,7 +27,9 @@ fclean: clean
 	@rm -f $(NAME)
 	@rm -f $(TEST_NAME)
 #######################
-re: fclean all
+re:
+	make fclean
+	make all
 #######################
 test: re
 	cd containers_test && ./do.sh

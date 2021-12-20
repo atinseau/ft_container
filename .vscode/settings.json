@@ -84,6 +84,7 @@
 		"random": "cpp",
 		"ranges": "cpp",
 		"cinttypes": "cpp",
-		"cstdbool": "cpp"
+		"cstdbool": "cpp",
+		"fstream": "cpp"
 	}
 }
