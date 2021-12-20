@@ -81,12 +81,12 @@ class RBTree
 
 	node_ptr searchTreeHelper(node_ptr node, value_type key)
 	{
-		if (node == _nil || key == node->data)
+		if (node == _nil || (!comp(key, node->data) && !comp(node->data, key)))
 		{
 			return node;
 		}
 
-		if (key < node->data)
+		if (comp(key, node->data))
 		{
 			return searchTreeHelper(node->left, key);
 		}
@@ -201,12 +201,12 @@ class RBTree
 		node_ptr x, y;
 		while (node != _nil)
 		{
-			if (node->data == key)
+			if ((!comp(key, node->data) && !comp(node->data, key)))
 			{
 				z = node;
 			}
 
-			if (node->data <= key)
+			if ((!comp(key, node->data) && !comp(node->data, key)) || comp(node->data, key))
 			{
 				node = node->right;
 			}
@@ -350,7 +350,7 @@ class RBTree
 	}
 
 public:
-	RBTree() : _nil(new node_type())
+	RBTree() : _nil(new node_type()), comp(Compare())
 	{
         _nil->color = 0;
         _nil->left = NULL;
@@ -521,7 +521,7 @@ public:
 		while (x != _nil)
 		{
 			y = x;
-			if (node->data < x->data)
+			if (comp(node->data, x->data))
 			{
 				x = x->left;
 			}
@@ -537,7 +537,7 @@ public:
 		{
 			root = node;
 		}
-		else if (node->data < y->data)
+		else if (comp(node->data, y->data))
 		{
 			y->left = node;
 		}
