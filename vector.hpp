@@ -18,18 +18,6 @@
 
 namespace ft
 {
-
-	/*	Custom vector implementation for 42 project
-	*	High level array for any type
-	*	Automatic memory gesture for non pointer T type else delete manually on exit
-	*	memory allocation overflow work like:
-	*		1 - if the size increase with one and old capacity is lower then
-	*			multiplie the capacity by two 
-	*		2 - sereval methods change the capacity at specific value like
-				assign who set the capacity to X parameter or some overload of insert who
-				change the capacity with growth continuoulsy 
-			3 - push_back increase to one at end
-	*/
 	template <
 		typename T,
 		typename Allocator = std::allocator<T>

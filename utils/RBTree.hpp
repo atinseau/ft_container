@@ -23,7 +23,8 @@ struct Node
 // class RBTree implements the operations in Red Black Tree
 template <
 	typename T,
-	class Compare = ft::less<T>
+	class Compare = ft::less<T>,
+    class Allocator = std::allocator<T>
 >
 class RBTree
 {
@@ -32,11 +33,42 @@ class RBTree
 		typedef Compare key_compare;
 		typedef Node<T>	node_type;
 		typedef typename node_type::node_ptr node_ptr;
+        typedef Allocator allocator_type;
+        typedef typename allocator_type::template rebind<node_type>::other allocator_node;
+
+        RBTree(const key_compare &comp = key_compare()) :
+                comp(comp),
+                _alloc(allocator_node())
+        {
+            _nil = _alloc.allocate(1);
+            _nil->color = 0;
+            _nil->left = NULL;
+            _nil->right = NULL;
+            root = _nil;
+        }
+
+        ~RBTree()
+        {
+           if (root)
+                destroy(root);
+            _alloc.deallocate(_nil, 1);
+        }
 
 	private:
 		node_ptr root;
 		node_ptr _nil;
-		Compare comp;
+        key_compare comp;
+        allocator_node _alloc;
+
+    void destroy(node_ptr x)
+    {
+        if (x->left != _nil)
+            destroy(x->left);
+        if (x->right != _nil)
+            destroy(x->right);
+        _alloc.destroy(x);
+        _alloc.deallocate(x, 1);
+    }
 
 	// initializes the nodes with appropirate values
 	// all the pointers are set to point to the null pointer
@@ -222,6 +254,13 @@ class RBTree
 			return;
 		}
 
+        if (z->left == _nil && z->right == _nil && z == root) {
+            _alloc.destroy(root);
+            _alloc.deallocate(z, 1);
+            root = NULL;
+            return;
+        }
+
 		y = z;
 		int y_original_color = y->color;
 		if (z->left == _nil)
@@ -255,7 +294,10 @@ class RBTree
 			y->left->parent = y;
 			y->color = z->color;
 		}
-		delete z;
+
+        _alloc.destroy(z);
+        _alloc.deallocate(z, 1);
+
 		if (y_original_color == 0)
 		{
 			fixDelete(x);
@@ -350,14 +392,6 @@ class RBTree
 	}
 
 public:
-	RBTree() : _nil(new node_type()), comp(Compare())
-	{
-        _nil->color = 0;
-        _nil->left = NULL;
-        _nil->right = NULL;
-		root = _nil;
-	}
-
 	// Pre-Order traversal
 	// Node->Left Subtree->Right Subtree
 	void preorder()
@@ -389,7 +423,7 @@ public:
 	// find the node with the minimum key
 	node_ptr minimum(node_ptr node)
 	{
-		while (node->left != _nil)
+		while (node && node->left != _nil)
 		{
 			node = node->left;
 		}
@@ -409,6 +443,9 @@ public:
 	// find the successor of a given node
 	node_ptr successor(node_ptr x)
 	{
+        if (!root)
+            return NULL;
+
         if (x == maximum(root))
             return NULL;
 		// if the right subtree is not null,
@@ -508,12 +545,18 @@ public:
 	void insert(value_type key)
 	{
 		// Ordinary Binary Search Insertion
-		node_ptr node = new node_type();
+		node_ptr node = _alloc.allocate(1);
 		node->parent = NULL;
 		node->data = key;
 		node->left = _nil;
 		node->right = _nil;
 		node->color = 1; // new node must be red
+
+        if (!root)
+        {
+            root = node;
+            return;
+        }
 
 		node_ptr y = NULL;
 		node_ptr x = this->root;
