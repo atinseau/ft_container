@@ -1,3 +1,6 @@
+#ifndef VECTOR_INCLUDE
+#define VECTOR_INCLUDE
+
 
 #include <memory>
 #include <iostream>
@@ -15,6 +18,7 @@
  #define REVERSE_INCLUDE
  #include "Iterators/ReverseIterator.hpp"
 #endif
+
 
 namespace ft
 {
@@ -433,3 +437,5 @@ namespace ft
 		return !(lhs == rhs);
 	}
 };
+
+#endif

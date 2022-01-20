@@ -22,6 +22,7 @@ all: $(NAME)
 #######################
 clean:
 	@rm -f $(OBJS)
+	@rm -f ft.out std.out
 #######################
 fclean: clean
 	@rm -f $(NAME)
@@ -31,21 +32,12 @@ re:
 	make fclean
 	make all
 #######################
-test: re
-	cd containers_test && ./do.sh
-# @docker build -t criterion -q test/. &> /dev/null
-# @docker run -it --env COMMAND=run_test -v $$PWD:/tmp/project criterion
-valgrind:
-	@docker build -t criterion -q test/. &> /dev/null
-	@docker run -it --env COMMAND=run_valgrind -v $$PWD:/tmp/project criterion
-
-# ONLY IN CONTAINER
-run_test:
-	@$(CC) $(TEST) -Wall -Wextra -Wall -g -lcriterion -I. -std=c++11 -D C11=1 -o $(TEST_NAME)
-	@valgrind ./$(TEST_NAME)
-run_valgrind: re
-	@valgrind ./$(NAME)
-
+test:
+	@$(CC) $(FLAGS) $(OBJS) -o $(NAME) -D TEST=0
+	@./$(NAME) seed_test > std.out
+	@$(CC) $(FLAGS) $(OBJS) -o $(NAME) -D TEST=1
+	@./$(NAME) seed_test > ft.out
+	diff std.out ft.out
 
 #######################
 .PHONY: all clean fclean re test
